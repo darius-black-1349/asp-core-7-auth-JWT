@@ -31,7 +31,7 @@ namespace AuthJWT.Controllers
             return user;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "GetAllUser")]
         [HttpGet("all")]
         public IEnumerable<User> GetAllUsers()
         {

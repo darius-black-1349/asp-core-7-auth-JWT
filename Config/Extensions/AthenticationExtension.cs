@@ -30,6 +30,14 @@ namespace AuthJWT.Config.Extensions
                     };
                 });
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("GetAllUser", policy =>
+                {
+                    policy.RequireClaim("AccessAllUser", "True");
+                });
+            });
+
             return services;
         }
     }

@@ -16,18 +16,18 @@ namespace AuthJWT.Services.UserService
                 Id = 1,
                 FirstName = "darius",
                 LastName = "black",
-                Username = "admin",
+                Username = "user1",
                 Password = "1234",
-                Role = "Admin",
+                AccessAllUser = true,
             },
             new User
             {
                 Id = 2,
                 FirstName = "david",
                 LastName = "black",
-                Username = "user",
+                Username = "user2",
                 Password = "1234",
-                Role = "User",
+                AccessAllUser = false,
             },
         };
 
@@ -51,7 +51,7 @@ namespace AuthJWT.Services.UserService
             var claims = new ClaimsIdentity();
             claims.AddClaims(new[]
             {
-                new Claim(ClaimTypes.Role, user.Role.ToString()),
+                new Claim("AccessAllUser", user.AccessAllUser.ToString()),
             });
 
             var tokenDescriptore = new SecurityTokenDescriptor
