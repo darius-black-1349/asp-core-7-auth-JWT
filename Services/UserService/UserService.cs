@@ -23,6 +23,7 @@ namespace AuthJWT.Services.UserService
                 {
                     "Permissions.User.GetAll", "Permissions.User.CheckUser"
                 },
+                Role = "Admin"
             },
             new User
             {
@@ -35,8 +36,31 @@ namespace AuthJWT.Services.UserService
                 {
                    "Permissions.User.CheckUser"
                 },
+                Role = "User"
             },
         };
+
+
+        private readonly List<Role> _roles = new List<Role>
+        {
+            new Role
+            {
+                 Name = "Admin",
+                 Permissions = new string[]
+                {
+                    "Permissions.User.GetAll", "Permissions.User.CheckUser"
+                },
+            },
+             new Role
+            {
+                 Name = "User",
+                 Permissions = new string[]
+                {
+                   "Permissions.User.CheckUser"
+                },
+            }
+        };
+
 
         private readonly IConfiguration _config;
 
@@ -63,6 +87,18 @@ namespace AuthJWT.Services.UserService
                 {
                     new Claim(Permissions.Permission, permission)
                 });
+            }
+
+            foreach (var rolePermission in _roles
+                .Find(role => role.Name == user.Role).Permissions)
+            {
+                if (!user.Permissions.Any(x => x == rolePermission))
+                {
+                    claims.AddClaims(new[]
+                    {
+                        new Claim(Permissions.Permission, rolePermission)
+                    });
+                }
             }
 
             var tokenDescriptore = new SecurityTokenDescriptor

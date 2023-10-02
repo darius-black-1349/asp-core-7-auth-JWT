@@ -15,5 +15,7 @@
         public string Token { get; set; }
 
         public string[] Permissions { get; set; }
+
+        public string Role { get; set; }
     }
 }
