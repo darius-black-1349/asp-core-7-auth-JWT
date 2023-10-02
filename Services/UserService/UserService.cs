@@ -18,6 +18,7 @@ namespace AuthJWT.Services.UserService
                 LastName = "black",
                 Username = "admin",
                 Password = "1234",
+                Role = "Admin",
             },
             new User
             {
@@ -26,6 +27,7 @@ namespace AuthJWT.Services.UserService
                 LastName = "black",
                 Username = "user",
                 Password = "1234",
+                Role = "User",
             },
         };
 
@@ -49,7 +51,7 @@ namespace AuthJWT.Services.UserService
             var claims = new ClaimsIdentity();
             claims.AddClaims(new[]
             {
-                new Claim(ClaimTypes.Name, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
             });
 
             var tokenDescriptore = new SecurityTokenDescriptor
@@ -73,7 +75,7 @@ namespace AuthJWT.Services.UserService
 
         public IEnumerable<User> GetAll()
         {
-            throw new NotImplementedException();
+            return _users.ToList();
         }
     }
 }

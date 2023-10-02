@@ -1,10 +1,12 @@
 ﻿using AuthJWT.DTOs;
 using AuthJWT.Entity;
 using AuthJWT.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AuthJWT.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("/api/[Controller]")]
     public class UserController : ControllerBase
@@ -18,6 +20,7 @@ namespace AuthJWT.Controllers
         }
 
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public User Login([FromBody] UserDto userDto)
         {
@@ -26,6 +29,13 @@ namespace AuthJWT.Controllers
             if (user == null) return null;
 
             return user;
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("all")]
+        public IEnumerable<User> GetAllUsers()
+        {
+            return _userService.GetAll();
         }
     }
 }
