@@ -1,4 +1,5 @@
-﻿using AuthJWT.DTOs;
+﻿using AuthJWT.Config.Permissions;
+using AuthJWT.DTOs;
 using AuthJWT.Entity;
 using AuthJWT.Services.UserService;
 using Microsoft.AspNetCore.Authorization;
@@ -31,11 +32,19 @@ namespace AuthJWT.Controllers
             return user;
         }
 
-        [Authorize(Policy = "GetAllUser")]
+        [PermissionAuthorize(Permissions.User.GetAll)]
         [HttpGet("all")]
         public IEnumerable<User> GetAllUsers()
         {
             return _userService.GetAll();
+        }
+
+
+        [PermissionAuthorize(Permissions.User.CheckUser)]
+        [HttpGet("check-user")]
+        public IActionResult CheckUser()
+        {
+            return Content("checking passed!");
         }
     }
 }

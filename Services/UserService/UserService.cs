@@ -1,4 +1,5 @@
-﻿using AuthJWT.Entity;
+﻿using AuthJWT.Config.Permissions;
+using AuthJWT.Entity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -18,7 +19,10 @@ namespace AuthJWT.Services.UserService
                 LastName = "black",
                 Username = "user1",
                 Password = "1234",
-                AccessAllUser = true,
+                Permissions = new string[]
+                {
+                    "Permissions.User.GetAll", "Permissions.User.CheckUser"
+                },
             },
             new User
             {
@@ -27,7 +31,10 @@ namespace AuthJWT.Services.UserService
                 LastName = "black",
                 Username = "user2",
                 Password = "1234",
-                AccessAllUser = false,
+                 Permissions = new string[]
+                {
+                   "Permissions.User.CheckUser"
+                },
             },
         };
 
@@ -49,10 +56,14 @@ namespace AuthJWT.Services.UserService
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Secret").Value);
             var claims = new ClaimsIdentity();
-            claims.AddClaims(new[]
+
+            foreach (var permission in user.Permissions)
             {
-                new Claim("AccessAllUser", user.AccessAllUser.ToString()),
-            });
+                claims.AddClaims(new[]
+                {
+                    new Claim(Permissions.Permission, permission)
+                });
+            }
 
             var tokenDescriptore = new SecurityTokenDescriptor
             {
